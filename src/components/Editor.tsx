@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { fetchOpenAISuggestion } from '../utils/openai';
 
 interface Version {
@@ -14,6 +15,17 @@ const Editor = () => {
   const [result, setResult] = useState('');
   const [loading, setLoading] = useState(false);
   const [versions, setVersions] = useState<Version[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('rewriteVersions');
+    if (saved) {
+      setVersions(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('rewriteVersions', JSON.stringify(versions));
+  }, [versions]);
 
   const handleSubmit = async () => {
     if (!text || !prompt) return;
