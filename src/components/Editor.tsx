@@ -7,9 +7,19 @@ interface Version {
   id: number;
   text: string;
   prompt: string;
+  original: string;
   timestamp: Date;
   diff: Change[];
 }
+
+const newVersion: Version = {
+    id: Date.now(),
+    text: aiResponse,
+    original: text,              
+    prompt,
+    timestamp: new Date(),
+    diff,
+};
 
 function applyDiff(diff: Change[]): string {
     return diff
@@ -123,6 +133,16 @@ const Editor = () => {
                 className="mt-2 text-sm text-green-600 hover:underline"
                 >
                 Accept All Changes
+                </button>
+                <button
+                onClick={() => {
+                    setText(v.original);
+                    setPrompt('');
+                    setResult('');
+                }}
+                className="text-sm text-red-600 hover:underline"
+                >
+                Reject Changes
                 </button>
               </li>
             ))}
