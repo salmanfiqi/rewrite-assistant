@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
+import { diffWords, Change } from 'diff';
 import { fetchOpenAISuggestion } from '../utils/openai';
 
 interface Version {
@@ -7,7 +8,15 @@ interface Version {
   text: string;
   prompt: string;
   timestamp: Date;
+  diff: Change[];
 }
+
+function applyDiff(diff: Change[]): string {
+    return diff
+      .filter(change => !change.removed)
+      .map(change => change.value)
+      .join('');
+  }
 
 const Editor = () => {
   const [text, setText] = useState('');
@@ -32,15 +41,18 @@ const Editor = () => {
     setLoading(true);
     const aiResponse = await fetchOpenAISuggestion(text, prompt);
     setResult(aiResponse);
-
+  
+    const diff = diffWords(text, aiResponse); 
+  
     const newVersion: Version = {
       id: Date.now(),
       text: aiResponse,
       prompt,
       timestamp: new Date(),
+      diff,
     };
+  
     setVersions([newVersion, ...versions]);
-
     setLoading(false);
   };
 
@@ -101,6 +113,16 @@ const Editor = () => {
                   className="mt-2 text-sm text-blue-600 hover:underline"
                 >
                   Restore
+                </button>
+                <button
+                onClick={() => {
+                    setText(applyDiff(v.diff));
+                    setPrompt('');
+                    setResult('');
+                }}
+                className="mt-2 text-sm text-green-600 hover:underline"
+                >
+                Accept All Changes
                 </button>
               </li>
             ))}
