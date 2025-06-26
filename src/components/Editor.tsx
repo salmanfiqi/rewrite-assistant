@@ -6,8 +6,8 @@ import { fetchOpenAISuggestion } from '../utils/openai';
 interface Version {
   id: number;
   text: string;
-  prompt: string;
   original: string;
+  prompt: string;
   timestamp: Date;
   diff: Change[];
 }
@@ -57,9 +57,10 @@ const Editor = () => {
     const newVersion: Version = {
       id: Date.now(),
       text: aiResponse,
-      prompt,
+      original: text,
+      prompt: prompt,
       timestamp: new Date(),
-      diff,
+      diff: diff,
     };
   
     setVersions([newVersion, ...versions]);
