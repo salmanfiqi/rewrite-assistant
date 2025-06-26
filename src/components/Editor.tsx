@@ -12,14 +12,6 @@ interface Version {
   diff: Change[];
 }
 
-const newVersion: Version = {
-    id: Date.now(),
-    text: aiResponse,
-    original: text,              
-    prompt,
-    timestamp: new Date(),
-    diff,
-};
 
 function applyDiff(diff: Change[]): string {
     return diff
