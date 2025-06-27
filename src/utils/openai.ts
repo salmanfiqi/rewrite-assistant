@@ -2,7 +2,6 @@ export async function fetchOpenAISuggestion(text: string, prompt: string): Promi
   console.log("API Key:", process.env.REACT_APP_OPENAI_API_KEY);
 
   const body = {
-    // use the turbo model that we verified via curl
     model: "gpt-3.5-turbo",
     messages: [
       { role: "system", content: "You're an expert editor." },
